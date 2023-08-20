@@ -2,15 +2,18 @@
   "records": [
     {
       "date": "2023-08-15",
-      "best-time": 131
+      "best_time": 131
     },
     {
       "date": "2023-08-17",
-      "best-time": 129
+      "best_time": 129
     },
     {
       "date": "2023-08-18",
-      "best-time": 128
-    }
+      "best_time": 128
+    },
+    {
+      "date": "2023-08-20",
+      "best_time": 124
   ]
 }
