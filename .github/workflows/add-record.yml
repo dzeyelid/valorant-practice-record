@@ -41,7 +41,7 @@ jobs:
         run: |
           gh pr create \
             --title "Add record of ${{ github.event.inputs.date }}" \
-            --body "Add record of ${{ github.event.inputs.date }}\n\n- `date`: `${{ env.CHALLENGE_DATE }}`\n- `best_time`: `${{ env.BEST_TIME }}`\n" \
+            --body "Add record of ${{ github.event.inputs.date }}\n\n- \`date\`: \`${{ env.CHALLENGE_DATE }}\`\n- \`best_time\`: \`${{ env.BEST_TIME }}\`\n" \
             --base main \
             --head ${BRANCH_NAME}
         env:
