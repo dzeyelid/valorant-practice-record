@@ -15,16 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
+    env:
+      CHALLENGE_DATE: ${{ github.event.inputs.date }}
+      BEST_TIME: ${{ github.event.inputs.best_time }}
+      BRANCH_NAME: add-record-${{ github.event.inputs.date }}
     steps:
       - uses: actions/checkout@v2
 
       - name: 記録をJSONファイルに追記
         run: |
           CURRENT=$(cat ./100-bots-challenge.json)
-          echo $CURRENT | jq '.records + [{"date":"${CHALLENGE_DATE}", "best_time": ${BEST_TIME}}]' > ./100-bots-challenge.json
-        env:
-          CHALLENGE_DATE: ${{ github.event.inputs.date }}
-          BEST_TIME: ${{ github.event.inputs.best_time }}
+          echo $CURRENT | jq ".records=.records + [{\"date\":\"$CHALLENGE_DATE\", \"best_time\": $BEST_TIME }]" > ./100-bots-challenge.json
 
       - name: 更新したファイルをコミット
         run: |
@@ -32,15 +34,19 @@ jobs:
           git config --local user.name "${{ vars.commit_user_name }}"
           git switch -c ${BRANCH_NAME}
           git add ./100-bots-challenge.json
-          git commit -m "Add record of ${{ github.event.inputs.date }}"
+          git commit -m "Add record of ${{ env.CHALLENGE_DATE }}"
           git push -u origin ${BRANCH_NAME}
-        env:
-          BRANCH_NAME: add-record-${{ github.event.inputs.date }}
 
       - name: プルリクエストを作成
         run: |
           gh pr create \
-            --title "Add record of ${{ github.event.inputs.date }}"
-            --body "Add record of ${{ github.event.inputs.date }}"
-            --base main
-            --head ${BRANCH_NAME}
+            --base main \
+            --head ${BRANCH_NAME} \
+            --title "Add record of ${{ env.CHALLENGE_DATE }}" \
+            --body "Add record of ${CHALLENGE_DATE}
+          
+            - \`date\`: \`${CHALLENGE_DATE}\`
+            - \`best_time\`: \`${BEST_TIME}\`
+            "
+        env:
+          GH_TOKEN: ${{ secrets.token_for_pr }}
