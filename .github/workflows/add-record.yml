@@ -45,4 +45,4 @@ jobs:
             --base main \
             --head ${BRANCH_NAME}
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.token_for_pr }}
