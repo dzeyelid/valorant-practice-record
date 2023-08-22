@@ -22,7 +22,7 @@ jobs:
       - name: 記録をJSONファイルに追記
         run: |
           CURRENT=$(cat ./100-bots-challenge.json)
-          echo $CURRENT | jq ".records + [{\"date\":\"${CHALLENGE_DATE}\", \"best_time\": ${BEST_TIME}}]" > ./100-bots-challenge.json
+          echo $CURRENT | jq ".records=.records + [{\"date\":\"${CHALLENGE_DATE}\", \"best_time\": ${BEST_TIME}}]" > ./100-bots-challenge.json
         env:
           CHALLENGE_DATE: ${{ github.event.inputs.date }}
           BEST_TIME: ${{ github.event.inputs.best_time }}
