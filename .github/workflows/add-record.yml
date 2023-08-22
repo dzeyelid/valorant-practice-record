@@ -19,6 +19,7 @@ jobs:
     env:
       CHALLENGE_DATE: ${{ github.event.inputs.date }}
       BEST_TIME: ${{ github.event.inputs.best_time }}
+      BRANCH_NAME: add-record-${{ github.event.inputs.date }}
     steps:
       - uses: actions/checkout@v2
 
@@ -35,8 +36,6 @@ jobs:
           git add ./100-bots-challenge.json
           git commit -m "Add record of ${{ env.CHALLENGE_DATE }}"
           git push -u origin ${BRANCH_NAME}
-        env:
-          BRANCH_NAME: add-record-${{ env.CHALLENGE_DATE }}
 
       - name: プルリクエストを作成
         run: |
