@@ -1,0 +1,46 @@
+name: ボット100体チャレンジの記録を追加する
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        type: string
+        description: 日付をYYYY-MM-DDで入力
+      best_time:
+        type: number
+        description: その日のベストスコア（秒）を入力
+
+jobs:
+  add_record:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 記録をJSONファイルに追記
+        run: |
+          CURRENT=$(cat ./100-bots-challenge.json)
+          echo $CURRENT | jq '.records + [{"date":"${CHALLENGE_DATE}", "best_time": ${BEST_TIME}}]' > ./100-bots-challenge.json
+        env:
+          CHALLENGE_DATE: ${{ github.event.inputs.date }}
+          BEST_TIME: ${{ github.event.inputs.best_time }}
+
+      - name: 更新したファイルをコミット
+        run: |
+          git config --local user.email "${{ vars.commit_email }}"
+          git config --local user.name "${{ vars.commit_user_name }}"
+          git switch -c ${BRANCH_NAME}
+          git add ./100-bots-challenge.json
+          git commit -m "Add record of ${{ github.event.inputs.date }}"
+          git push -u origin ${BRANCH_NAME}
+        env:
+          BRANCH_NAME: add-record-${{ github.event.inputs.date }}
+
+      - name: プルリクエストを作成
+        run: |
+          gh pr create \
+            --title "Add record of ${{ github.event.inputs.date }}"
+            --body "Add record of ${{ github.event.inputs.date }}"
+            --base main
+            --head ${BRANCH_NAME}
