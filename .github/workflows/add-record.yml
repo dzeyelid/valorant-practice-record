@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v2
 
@@ -44,3 +45,5 @@ jobs:
             --body "Add record of ${{ github.event.inputs.date }}"
             --base main
             --head ${BRANCH_NAME}
+        env:
+          GH_TOKEN: ${{ github.token }}
