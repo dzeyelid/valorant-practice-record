@@ -40,9 +40,13 @@ jobs:
       - name: プルリクエストを作成
         run: |
           gh pr create \
-            --title "Add record of ${{ github.event.inputs.date }}" \
-            --body "Add record of ${{ github.event.inputs.date }}\n\n- \`date\`: \`${{ env.CHALLENGE_DATE }}\`\n- \`best_time\`: \`${{ env.BEST_TIME }}\`\n" \
             --base main \
-            --head ${BRANCH_NAME}
+            --head ${BRANCH_NAME} \
+            --title "Add record of ${{ env.CHALLENGE_DATE }}" \
+            --body "Add record of ${CHALLENGE_DATE}
+          
+            - \`date\`: \`${CHALLENGE_DATE}\`
+            - \`best_time\`: \`${BEST_TIME}\`
+            "
         env:
           GH_TOKEN: ${{ secrets.token_for_pr }}
